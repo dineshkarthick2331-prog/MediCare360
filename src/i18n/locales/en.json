@@ -1,0 +1,41 @@
+{
+  "app": { "footer": "MediCare 360 · Your Health, One Platform" },
+  "nav": { "home": "Home", "patientLogin": "Patient Login", "doctorLogin": "Doctor Login" },
+  "language": { "label": "Choose language" },
+  "home": {
+    "title": "Healthcare made easier for everyone.",
+    "subtitle": "Book appointments, track your token, and access your health records in one secure place.",
+    "bookAppointment": "Book an appointment",
+    "portalTitle": "Choose your portal",
+    "portalDescription": "Sign in to the {{role}} portal.",
+    "signIn": "Sign in"
+  },
+  "roles": { "patient": "Patient", "doctor": "Doctor", "nurse": "Nurse", "staff": "Staff", "admin": "Administrator" },
+  "auth": {
+    "loginTitle": "{{role}} login",
+    "loginSubtitle": "Use the account assigned to you by the hospital.",
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "loginFailed": "Sign-in failed. Check your details or account permissions.",
+    "invalidRole": "Invalid portal.",
+    "noAccount": "Need an account?",
+    "contactRegistration": "Contact hospital registration."
+  },
+  "dashboard": {
+    "title": "{{role}} dashboard",
+    "demoNotice": "Starter scaffold — not for real patient data.",
+    "placeholder": "This dashboard is a starting point. Connect and test each module before use.",
+    "modulePlaceholder": "Module scaffold; workflow and permissions must be implemented."
+  },
+  "modules": {
+    "appointments": "Appointments",
+    "medicalRecords": "Medical records",
+    "prescriptions": "Prescriptions",
+    "reports": "Reports",
+    "billing": "Billing",
+    "insurance": "Insurance"
+  },
+  "common": { "notFound": "Page not found", "backHome": "Back to home" }
+}
