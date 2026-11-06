@@ -31,6 +31,7 @@ import AdminUsersPage from './pages/features/AdminUsersPage';
 // Layout
 import AppLayout from './components/layout/AppLayout';
 import { Role } from './data/demo';
+import MediBot from './components/chatbot/MediBot';
 
 function RequireAuth({ children, role }: { children: React.ReactNode; role: Role }) {
   const { isAuthenticated, role: userRole } = useAuth();
@@ -42,7 +43,8 @@ function RequireAuth({ children, role }: { children: React.ReactNode; role: Role
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <Routes>
       {/* Public */}
       <Route path="/" element={<HomePage />} />
       <Route path="/:role/login" element={<LoginPage />} />
@@ -134,5 +136,7 @@ export default function App() {
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+    <MediBot />
+  </>
   );
 }

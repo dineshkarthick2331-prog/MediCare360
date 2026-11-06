@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { APPOINTMENTS, PRESCRIPTIONS, LAB_REPORTS, INVOICES, QUEUE } from '../../data/demo';
+import { PRESCRIPTIONS, LAB_REPORTS, INVOICES, QUEUE } from '../../data/demo';
+import { getStoredAppointments, DATA_UPDATE_EVENT } from '../../services/hospitalDataStore';
 
 export default function PatientDashboard() {
   const { user } = useAuth();
@@ -9,6 +10,7 @@ export default function PatientDashboard() {
   const [myToken] = useState('A012');
   const [ahead, setAhead] = useState(1);
   const [time, setTime] = useState(new Date());
+  const [appointments, setAppointments] = useState(getStoredAppointments());
 
   // Simulate live token movement
   useEffect(() => {
@@ -16,7 +18,15 @@ export default function PatientDashboard() {
     return () => clearInterval(iv);
   }, []);
 
-  const upcoming = APPOINTMENTS.find(a => a.patientId === 'pat-001' && a.status === 'Confirmed');
+  useEffect(() => {
+    const handleUpdate = () => {
+      setAppointments([...getStoredAppointments()]);
+    };
+    window.addEventListener(DATA_UPDATE_EVENT, handleUpdate);
+    return () => window.removeEventListener(DATA_UPDATE_EVENT, handleUpdate);
+  }, []);
+
+  const upcoming = appointments.find(a => a.patientId === 'pat-001' && a.status === 'Confirmed');
   const recentRx = PRESCRIPTIONS.filter(p => p.patientId === 'pat-001').slice(0, 2);
   const pendingReports = LAB_REPORTS.filter(r => r.patientId === 'pat-001' && r.status !== 'Reviewed').length;
   const pendingBill = INVOICES.find(i => i.patientId === 'pat-001' && i.status === 'Unpaid');

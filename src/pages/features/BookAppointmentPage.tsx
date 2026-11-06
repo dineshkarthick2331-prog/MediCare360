@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DOCTORS } from '../../data/demo';
+import { addAppointment } from '../../services/hospitalDataStore';
+import { sendAppointmentNotification } from '../../services/notificationService';
 
 export default function BookAppointmentPage() {
   const navigate = useNavigate();
@@ -10,15 +12,40 @@ export default function BookAppointmentPage() {
   const [visitType, setVisitType] = useState('New Consultation');
   const [reason, setReason] = useState('');
   const [bookedSuccess, setBookedSuccess] = useState(false);
+  const [assignedToken, setAssignedToken] = useState('A016');
 
   const selectedDoctor = DOCTORS.find((d) => d.id === selectedDoctorId) || DOCTORS[0];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const created = addAppointment({
+      patientId: 'pat-001',
+      patientName: 'Dinesh Karthick',
+      doctorId: selectedDoctor.id,
+      doctorName: selectedDoctor.name,
+      department: selectedDoctor.department,
+      date: selectedDate,
+      time: selectedSlot,
+      type: visitType as any,
+      status: 'Confirmed',
+      fee: selectedDoctor.fee,
+      paid: true,
+      notes: reason || 'Booked online',
+    });
+
+    setAssignedToken(created.token);
     setBookedSuccess(true);
+
+    await sendAppointmentNotification({
+      appointment: created,
+      recipientPhone: '+91 98765 43210',
+      recipientName: 'Dinesh Karthick',
+      action: 'booked',
+    });
+
     setTimeout(() => {
       navigate('/patient/appointments');
-    }, 2000);
+    }, 2500);
   };
 
   const slots = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '02:00 PM', '02:30 PM', '03:00 PM'];
@@ -38,7 +65,10 @@ export default function BookAppointmentPage() {
             Your consultation with <strong>{selectedDoctor.name}</strong> has been scheduled for <strong>{selectedDate} at {selectedSlot}</strong>.
           </p>
           <div style={{ display: 'inline-block', background: '#166534', color: 'white', padding: '6px 16px', borderRadius: '20px', fontWeight: 700, margin: '1rem 0' }}>
-            Token Assigned: A016
+            Token Assigned: {assignedToken}
+          </div>
+          <div style={{ fontSize: '0.82rem', color: '#15803D', marginBottom: '1rem' }}>
+            ✅ WhatsApp & SMS confirmation dispatched to +91 98765 43210
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Redirecting to your appointments list…</p>
         </div>

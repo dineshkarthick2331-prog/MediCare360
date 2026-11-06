@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { DEMO_USERS, DOCTORS, DEPARTMENTS, AMBULANCES } from '../src/data/demo';
 import en from '../src/i18n/locales/en.json';

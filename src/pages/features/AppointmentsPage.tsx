@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { APPOINTMENTS, Appointment } from '../../data/demo';
+import { Appointment } from '../../data/demo';
+import { getStoredAppointments, DATA_UPDATE_EVENT } from '../../services/hospitalDataStore';
 
 export default function AppointmentsPage() {
   const { user } = useAuth();
   const [filter, setFilter] = useState<'all' | 'Confirmed' | 'Completed'>('all');
+  const [appointments, setAppointments] = useState<Appointment[]>(getStoredAppointments());
 
-  const userAppointments = APPOINTMENTS.filter((a) => {
+  useEffect(() => {
+    const handleUpdate = () => {
+      setAppointments([...getStoredAppointments()]);
+    };
+    window.addEventListener(DATA_UPDATE_EVENT, handleUpdate);
+    return () => window.removeEventListener(DATA_UPDATE_EVENT, handleUpdate);
+  }, []);
+
+  const userAppointments = appointments.filter((a) => {
     if (user?.role === 'patient') return a.patientName.includes('Dinesh') || a.patientId === 'pat-001';
     if (user?.role === 'doctor') return a.doctorId === 'doc-001';
     return true;
